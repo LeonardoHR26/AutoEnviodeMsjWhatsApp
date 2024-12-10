@@ -2,22 +2,20 @@ import java.awt.event.KeyEvent;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.awt.event.KeyAdapter;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
-public class AcruxWhatsAppSender extends JFrame {
+public class Sender extends JFrame {
 
     private JTextField campoNumeros;
     private JTextArea areaMensaje;
     private JTextArea areaEnlaces;
     private JButton botonGenerar;
-    private JButton botonCopiarTodo;
+    private JButton botonCopiarTodos;
     private JButton botonLimpiarNumeros;
     private JButton botonLimpiarMensaje;
     private JButton botonLimpiarEnlaces;
@@ -25,7 +23,7 @@ public class AcruxWhatsAppSender extends JFrame {
     private JPanel panelEnlaces;
     private JSplitPane divisor;
 
-    public AcruxWhatsAppSender() {
+    public Sender() {
         configurarVentana();
         inicializarComponentes();
         configurarPaneles();
@@ -34,7 +32,7 @@ public class AcruxWhatsAppSender extends JFrame {
     }
 
     private void configurarVentana() {
-        setTitle("AcruxWhatsAppSender by Leonardohr26");
+        setTitle("Sender");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -44,7 +42,6 @@ public class AcruxWhatsAppSender extends JFrame {
 
     private void inicializarComponentes() {
         campoNumeros = new JTextField();
-        campoNumeros.setToolTipText("Ingresa números de teléfono separados por comas");
         aplicarFiltroNumeros(campoNumeros);
         campoNumeros.setFont(new Font("Arial", Font.PLAIN, 20));
 
@@ -62,46 +59,11 @@ public class AcruxWhatsAppSender extends JFrame {
         areaEnlaces.setFont(new Font("Arial", Font.PLAIN, 16));
 
         botonGenerar = new JButton("Generar Enlaces");
-        botonGenerar.setBackground(new Color(0x52F7D1));
-        botonGenerar.setForeground(Color.BLACK);
-        botonGenerar.setOpaque(true);
-        botonGenerar.setBorderPainted(false);
-        botonGenerar.setFont(new Font("Arial", Font.BOLD, 20));
-
-        botonCopiarTodo = new JButton("Copiar Todos");
-        botonCopiarTodo.setBackground(Color.BLUE);
-        botonCopiarTodo.setForeground(Color.WHITE);
-        botonCopiarTodo.setOpaque(true);
-        botonCopiarTodo.setBorderPainted(false);
-        botonCopiarTodo.setFont(new Font("Arial", Font.BOLD, 20));
-
-        botonLimpiarEnlaces = new JButton("Limpiar Enlaces Generados");
-        botonLimpiarEnlaces.setBackground(new Color(0xFFCCCC));
-        botonLimpiarEnlaces.setForeground(Color.BLACK);
-        botonLimpiarEnlaces.setOpaque(true);
-        botonLimpiarEnlaces.setBorderPainted(false);
-        botonLimpiarEnlaces.setFont(new Font("Arial", Font.BOLD, 20));
-
+        botonCopiarTodos = new JButton("Copiar Todos");
         botonLimpiarNumeros = new JButton("Limpiar Números");
-        botonLimpiarNumeros.setBackground(new Color(0xFFCCCC));
-        botonLimpiarNumeros.setForeground(Color.BLACK);
-        botonLimpiarNumeros.setOpaque(true);
-        botonLimpiarNumeros.setBorderPainted(false);
-        botonLimpiarNumeros.setFont(new Font("Arial", Font.BOLD, 20));
-
         botonLimpiarMensaje = new JButton("Limpiar Mensaje");
-        botonLimpiarMensaje.setBackground(new Color(0xFFCCCC));
-        botonLimpiarMensaje.setForeground(Color.BLACK);
-        botonLimpiarMensaje.setOpaque(true);
-        botonLimpiarMensaje.setBorderPainted(false);
-        botonLimpiarMensaje.setFont(new Font("Arial", Font.BOLD, 20));
-
+        botonLimpiarEnlaces = new JButton("Limpiar Enlaces");
         botonEnviarMensajes = new JButton("Enviar Mensajes");
-        botonEnviarMensajes.setBackground(new Color(0x28A745));
-        botonEnviarMensajes.setForeground(Color.WHITE);
-        botonEnviarMensajes.setOpaque(true);
-        botonEnviarMensajes.setBorderPainted(false);
-        botonEnviarMensajes.setFont(new Font("Arial", Font.BOLD, 20));
 
         panelEnlaces = new JPanel();
         panelEnlaces.setLayout(new BoxLayout(panelEnlaces, BoxLayout.Y_AXIS));
@@ -109,16 +71,14 @@ public class AcruxWhatsAppSender extends JFrame {
     }
 
     private void configurarPaneles() {
-        JPanel panelNumeros = crearPanel("Números de Teléfono", new JLabel("Ingresa números de teléfono (separados por comas):"), campoNumeros, botonLimpiarNumeros);
-        JPanel panelMensaje = crearPanel("Mensaje", new JLabel("Ingresa tu mensaje:"), new JScrollPane(areaMensaje), botonLimpiarMensaje);
+        JPanel panelNumeros = crearPanel("Números de Teléfono", campoNumeros, botonLimpiarNumeros);
+        JPanel panelMensaje = crearPanel("Mensaje", new JScrollPane(areaMensaje), botonLimpiarMensaje);
 
         JPanel panelTextoEnlaces = new JPanel(new BorderLayout());
-        panelTextoEnlaces.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        panelTextoEnlaces.add(new JLabel("Todos los enlaces generados:"), BorderLayout.NORTH);
         panelTextoEnlaces.add(new JScrollPane(areaEnlaces), BorderLayout.CENTER);
 
         JPanel panelBotones = new JPanel(new BorderLayout());
-        panelBotones.add(botonCopiarTodo, BorderLayout.NORTH);
+        panelBotones.add(botonCopiarTodos, BorderLayout.NORTH);
         panelBotones.add(botonLimpiarEnlaces, BorderLayout.SOUTH);
 
         panelTextoEnlaces.add(panelBotones, BorderLayout.SOUTH);
@@ -134,14 +94,9 @@ public class AcruxWhatsAppSender extends JFrame {
 
         divisor = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelPrincipal, panelDerecho);
         add(divisor, BorderLayout.CENTER);
-
-        JPanel panelSuperior = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        panelSuperior.add(botonLimpiarEnlaces);
-        panelSuperior.add(botonEnviarMensajes);
-        add(panelSuperior, BorderLayout.NORTH);
     }
 
-    private JPanel crearPanel(String titulo, JComponent etiqueta, JComponent componente, JButton botonLimpiar) {
+    private JPanel crearPanel(String titulo, JComponent componente, JButton botonLimpiar) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(new Color(0x007BFF)),
@@ -151,17 +106,14 @@ public class AcruxWhatsAppSender extends JFrame {
                 new Font("Arial", Font.BOLD, 20),
                 new Color(0x007BFF)
         ));
-        JPanel panelInterno = new JPanel(new BorderLayout());
-        panelInterno.add(etiqueta, BorderLayout.NORTH);
-        panelInterno.add(componente, BorderLayout.CENTER);
-        panelInterno.add(botonLimpiar, BorderLayout.SOUTH);
-        panel.add(panelInterno, BorderLayout.CENTER);
+        panel.add(componente, BorderLayout.CENTER);
+        panel.add(botonLimpiar, BorderLayout.SOUTH);
         return panel;
     }
 
     private void configurarBotones() {
         botonGenerar.addActionListener(e -> generarEnlaces());
-        botonCopiarTodo.addActionListener(e -> copiarAlPortapapeles(areaEnlaces.getText()));
+        botonCopiarTodos.addActionListener(e -> copiarAlPortapapeles(areaEnlaces.getText()));
         botonLimpiarEnlaces.addActionListener(e -> limpiarTodosEnlaces());
         botonEnviarMensajes.addActionListener(e -> abrirEnlacesEnNavegador());
         botonLimpiarNumeros.addActionListener(e -> campoNumeros.setText(""));
@@ -169,10 +121,7 @@ public class AcruxWhatsAppSender extends JFrame {
     }
 
     private void ajustarDivisor() {
-        SwingUtilities.invokeLater(() -> {
-            int width = getWidth();
-            divisor.setDividerLocation(width / 2);
-        });
+        SwingUtilities.invokeLater(() -> divisor.setDividerLocation(getWidth() / 2));
     }
 
     private void generarEnlaces() {
@@ -180,16 +129,15 @@ public class AcruxWhatsAppSender extends JFrame {
         String mensaje = areaMensaje.getText().trim();
 
         if (numeros.isEmpty() || mensaje.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Ingresa al menos un número y el mensaje.", "Error: Campos vacíos", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ingresa al menos un número y el mensaje.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         panelEnlaces.removeAll();
         areaEnlaces.setText("");
+        String[] listaNumeros = numeros.split("\\s*,\\s*");
 
-        String[] arregloNumeros = numeros.split("\\s*,\\s*");
-
-        for (String numero : arregloNumeros) {
+        for (String numero : listaNumeros) {
             try {
                 String mensajeCodificado = URLEncoder.encode(mensaje, StandardCharsets.UTF_8.toString());
                 String enlace = "https://web.whatsapp.com/send?phone=" + numero + "&text=" + mensajeCodificado;
@@ -207,13 +155,18 @@ public class AcruxWhatsAppSender extends JFrame {
                 panelEnlaces.add(panelEnlace);
 
                 areaEnlaces.append(enlace + "\n");
-
             } catch (UnsupportedEncodingException ex) {
                 ex.printStackTrace();
             }
         }
         panelEnlaces.revalidate();
         panelEnlaces.repaint();
+    }
+
+    private void copiarAlPortapapeles(String texto) {
+        StringSelection seleccion = new StringSelection(texto);
+        Clipboard portapapeles = Toolkit.getDefaultToolkit().getSystemClipboard();
+        portapapeles.setContents(seleccion, null);
     }
 
     private void limpiarTodosEnlaces() {
@@ -223,46 +176,53 @@ public class AcruxWhatsAppSender extends JFrame {
         panelEnlaces.repaint();
     }
 
-    private void abrirEnlacesEnNavegador() {
-        String texto = areaEnlaces.getText().trim();
-        if (texto.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No hay enlaces generados para abrir.", "Error: No hay enlaces", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        String[] enlaces = texto.split("\\s+");
-
-        for (String enlace : enlaces) {
-            try {
-                Desktop.getDesktop().browse(new URI(enlace));
-                Thread.sleep(1000);
-            } catch (IOException | URISyntaxException | InterruptedException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    private void aplicarFiltroNumeros(JTextField campo) {
-        campo.addKeyListener(new KeyAdapter() {
+    private void aplicarFiltroNumeros(JTextField campoTexto) {
+        campoTexto.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
-                if (!Character.isDigit(c) && c != ',' && c != ' ') {
+                if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_COMMA && c != KeyEvent.VK_SPACE) {
                     e.consume();
                 }
             }
         });
     }
 
-    private void copiarAlPortapapeles(String texto) {
-        Clipboard portapapeles = Toolkit.getDefaultToolkit().getSystemClipboard();
-        StringSelection seleccion = new StringSelection(texto);
-        portapapeles.setContents(seleccion, null);
+    private void abrirEnlacesEnNavegador() {
+        String[] enlaces = linksTextArea.getText().split("\\s*\\n\\s*");
+    try {
+        Robot robot = new Robot();
+        Runtime.getRuntime().exec("cmd /c start chrome");
+        Thread.sleep(1000);
+
+        for (String enlace : enlaces) {
+            robot.keyPress(KeyEvent.VK_CONTROL);
+            robot.keyPress(KeyEvent.VK_L);
+            robot.keyRelease(KeyEvent.VK_L);
+            robot.keyRelease(KeyEvent.VK_CONTROL);
+            Thread.sleep(1000);
+
+            StringSelection stringSelection = new StringSelection(enlace);
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
+
+            robot.keyPress(KeyEvent.VK_CONTROL);
+            robot.keyPress(KeyEvent.VK_V);
+            robot.keyRelease(KeyEvent.VK_V);
+            robot.keyRelease(KeyEvent.VK_CONTROL);
+            Thread.sleep(1000);
+
+            robot.keyPress(KeyEvent.VK_ENTER);
+            robot.keyRelease(KeyEvent.VK_ENTER);
+            Thread.sleep(5000); // Esperar entre enlaces
+        }
+    } catch (AWTException | IOException | InterruptedException e) {
+        e.printStackTrace();
+    }
+
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            AcruxWhatsAppSender app = new AcruxWhatsAppSender();
-            app.setVisible(true);
-        });
+        SwingUtilities.invokeLater(() -> new Sender().setVisible(true));
     }
 }
