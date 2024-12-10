@@ -2,26 +2,30 @@ import java.awt.event.KeyEvent;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.awt.event.KeyAdapter;
-import javax.swing.*;
-import javax.swing.border.TitledBorder;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
 
 public class Sender extends JFrame {
 
-    private JTextField campoNumeros;
-    private JTextArea areaMensaje;
-    private JTextArea areaEnlaces;
-    private JButton botonGenerar;
-    private JButton botonCopiarTodos;
-    private JButton botonLimpiarNumeros;
-    private JButton botonLimpiarMensaje;
-    private JButton botonLimpiarEnlaces;
-    private JButton botonEnviarMensajes;
-    private JPanel panelEnlaces;
-    private JSplitPane divisor;
+    private JTextField phoneNumbersField;
+    private JTextArea messageArea;
+    private JTextArea linksTextArea;
+    private JButton sendButton;
+    private JButton copyAllButton;
+    private JButton clearPhoneButton;
+    private JButton clearMessageButton;
+    private JButton clearLinksButton;
+    private JButton sendMessagesButton;
+    private JPanel linksPanel;
+    private JSplitPane splitPane;
 
     public Sender() {
         configurarVentana();
@@ -32,152 +36,207 @@ public class Sender extends JFrame {
     }
 
     private void configurarVentana() {
-        setTitle("Sender");
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setTitle("Sender by Leonardohr26");
+        setExtendedState(JFrame.MAXIMIZED_BOTH); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(null); 
         setLayout(new BorderLayout());
         getContentPane().setBackground(Color.WHITE);
     }
 
     private void inicializarComponentes() {
-        campoNumeros = new JTextField();
-        aplicarFiltroNumeros(campoNumeros);
-        campoNumeros.setFont(new Font("Arial", Font.PLAIN, 20));
+        phoneNumbersField = new JTextField();
+        phoneNumbersField.setToolTipText("Ingresa números de teléfono separados por comas");
+        aplicarFiltroNumeros(phoneNumbersField);
+        phoneNumbersField.setFont(new Font("Arial", Font.PLAIN, 20)); 
 
-        areaMensaje = new JTextArea(10, 30);
-        areaMensaje.setLineWrap(true);
-        areaMensaje.setWrapStyleWord(true);
-        areaMensaje.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-        areaMensaje.setFont(new Font("Arial", Font.PLAIN, 20));
+        messageArea = new JTextArea(10, 30);
+        messageArea.setLineWrap(true);
+        messageArea.setWrapStyleWord(true);
+        messageArea.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+        messageArea.setFont(new Font("Arial", Font.PLAIN, 20)); 
 
-        areaEnlaces = new JTextArea(10, 40);
-        areaEnlaces.setEditable(false);
-        areaEnlaces.setLineWrap(true);
-        areaEnlaces.setWrapStyleWord(true);
-        areaEnlaces.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-        areaEnlaces.setFont(new Font("Arial", Font.PLAIN, 16));
+        linksTextArea = new JTextArea(10, 40);
+        linksTextArea.setEditable(false);
+        linksTextArea.setLineWrap(true);
+        linksTextArea.setWrapStyleWord(true);
+        linksTextArea.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+        linksTextArea.setFont(new Font("Arial", Font.PLAIN, 16)); 
 
-        botonGenerar = new JButton("Generar Enlaces");
-        botonCopiarTodos = new JButton("Copiar Todos");
-        botonLimpiarNumeros = new JButton("Limpiar Números");
-        botonLimpiarMensaje = new JButton("Limpiar Mensaje");
-        botonLimpiarEnlaces = new JButton("Limpiar Enlaces");
-        botonEnviarMensajes = new JButton("Enviar Mensajes");
+        sendButton = new JButton("Generar Enlaces");
+        sendButton.setBackground(new Color(0x52F7D1)); 
+        sendButton.setForeground(Color.BLACK);
+        sendButton.setOpaque(true);
+        sendButton.setBorderPainted(false);
+        sendButton.setFont(new Font("Arial", Font.BOLD, 20)); 
 
-        panelEnlaces = new JPanel();
-        panelEnlaces.setLayout(new BoxLayout(panelEnlaces, BoxLayout.Y_AXIS));
-        panelEnlaces.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        copyAllButton = new JButton("Copiar Todos");
+        copyAllButton.setBackground(Color.BLUE); 
+        copyAllButton.setForeground(Color.WHITE);
+        copyAllButton.setOpaque(true);
+        copyAllButton.setBorderPainted(false);
+        copyAllButton.setFont(new Font("Arial", Font.BOLD, 20)); 
+
+        clearLinksButton = new JButton("Limpiar Enlaces Generados");
+        clearLinksButton.setBackground(new Color(0xFFCCCC));
+        clearLinksButton.setForeground(Color.BLACK);
+        clearLinksButton.setOpaque(true);
+        clearLinksButton.setBorderPainted(false);
+        clearLinksButton.setFont(new Font("Arial", Font.BOLD, 20)); 
+
+        clearPhoneButton = new JButton("Limpiar Números");
+        clearPhoneButton.setBackground(new Color(0xFFCCCC)); 
+        clearPhoneButton.setForeground(Color.BLACK);
+        clearPhoneButton.setOpaque(true);
+        clearPhoneButton.setBorderPainted(false);
+        clearPhoneButton.setFont(new Font("Arial", Font.BOLD, 20)); 
+
+        clearMessageButton = new JButton("Limpiar Mensaje");
+        clearMessageButton.setBackground(new Color(0xFFCCCC)); 
+        clearMessageButton.setForeground(Color.BLACK);
+        clearMessageButton.setOpaque(true);
+        clearMessageButton.setBorderPainted(false);
+        clearMessageButton.setFont(new Font("Arial", Font.BOLD, 20)); 
+
+        sendMessagesButton = new JButton("Enviar Mensajes"); 
+        sendMessagesButton.setBackground(new Color(0x28A745)); 
+        sendMessagesButton.setForeground(Color.WHITE);
+        sendMessagesButton.setOpaque(true);
+        sendMessagesButton.setBorderPainted(false);
+        sendMessagesButton.setFont(new Font("Arial", Font.BOLD, 20)); 
+
+        linksPanel = new JPanel();
+        linksPanel.setLayout(new BoxLayout(linksPanel, BoxLayout.Y_AXIS));
+        linksPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
     private void configurarPaneles() {
-        JPanel panelNumeros = crearPanel("Números de Teléfono", campoNumeros, botonLimpiarNumeros);
-        JPanel panelMensaje = crearPanel("Mensaje", new JScrollPane(areaMensaje), botonLimpiarMensaje);
+        JPanel phonePanel = crearPanel("Números de Teléfono", new JLabel("Ingresa números de teléfono (separados por comas):"), phoneNumbersField, clearPhoneButton);
+        JPanel messagePanel = crearPanel("Mensaje", new JLabel("Ingresa tu mensaje:"), new JScrollPane(messageArea), clearMessageButton);
 
-        JPanel panelTextoEnlaces = new JPanel(new BorderLayout());
-        panelTextoEnlaces.add(new JScrollPane(areaEnlaces), BorderLayout.CENTER);
+        JPanel linksTextPanel = new JPanel(new BorderLayout());
+        linksTextPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        linksTextPanel.add(new JLabel("Todos los enlaces generados:"), BorderLayout.NORTH);
+        linksTextPanel.add(new JScrollPane(linksTextArea), BorderLayout.CENTER);
 
-        JPanel panelBotones = new JPanel(new BorderLayout());
-        panelBotones.add(botonCopiarTodos, BorderLayout.NORTH);
-        panelBotones.add(botonLimpiarEnlaces, BorderLayout.SOUTH);
+        JPanel buttonPanel = new JPanel(new BorderLayout());
+        buttonPanel.add(copyAllButton, BorderLayout.NORTH);
+        buttonPanel.add(clearLinksButton, BorderLayout.SOUTH);
 
-        panelTextoEnlaces.add(panelBotones, BorderLayout.SOUTH);
+        linksTextPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        JPanel panelDerecho = new JPanel(new BorderLayout());
-        panelDerecho.add(new JScrollPane(panelEnlaces), BorderLayout.CENTER);
-        panelDerecho.add(panelTextoEnlaces, BorderLayout.SOUTH);
+        JPanel rightPanel = new JPanel(new BorderLayout());
+        rightPanel.add(new JScrollPane(linksPanel), BorderLayout.CENTER);
+        rightPanel.add(linksTextPanel, BorderLayout.SOUTH);
 
-        JPanel panelPrincipal = new JPanel(new BorderLayout());
-        panelPrincipal.add(panelNumeros, BorderLayout.NORTH);
-        panelPrincipal.add(panelMensaje, BorderLayout.CENTER);
-        panelPrincipal.add(botonGenerar, BorderLayout.SOUTH);
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.add(phonePanel, BorderLayout.NORTH);
+        mainPanel.add(messagePanel, BorderLayout.CENTER);
+        mainPanel.add(sendButton, BorderLayout.SOUTH);
 
-        divisor = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelPrincipal, panelDerecho);
-        add(divisor, BorderLayout.CENTER);
+        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mainPanel, rightPanel);
+        add(splitPane, BorderLayout.CENTER);
+
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        topPanel.add(clearLinksButton);
+        topPanel.add(sendMessagesButton); 
+        add(topPanel, BorderLayout.NORTH);
     }
 
-    private JPanel crearPanel(String titulo, JComponent componente, JButton botonLimpiar) {
+    private JPanel crearPanel(String title, JComponent label, JComponent component, JButton clearButton) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createLineBorder(new Color(0x007BFF)),
-                titulo,
+                BorderFactory.createLineBorder(new Color(0x007BFF)), 
+                title,
                 TitledBorder.DEFAULT_JUSTIFICATION,
                 TitledBorder.DEFAULT_POSITION,
-                new Font("Arial", Font.BOLD, 20),
-                new Color(0x007BFF)
+                new Font("Arial", Font.BOLD, 20), 
+                new Color(0x007BFF) 
         ));
-        panel.add(componente, BorderLayout.CENTER);
-        panel.add(botonLimpiar, BorderLayout.SOUTH);
+        JPanel innerPanel = new JPanel(new BorderLayout());
+        innerPanel.add(label, BorderLayout.NORTH);
+        innerPanel.add(component, BorderLayout.CENTER);
+        innerPanel.add(clearButton, BorderLayout.SOUTH);
+        panel.add(innerPanel, BorderLayout.CENTER);
         return panel;
     }
 
     private void configurarBotones() {
-        botonGenerar.addActionListener(e -> generarEnlaces());
-        botonCopiarTodos.addActionListener(e -> copiarAlPortapapeles(areaEnlaces.getText()));
-        botonLimpiarEnlaces.addActionListener(e -> limpiarTodosEnlaces());
-        botonEnviarMensajes.addActionListener(e -> abrirEnlacesEnNavegador());
-        botonLimpiarNumeros.addActionListener(e -> campoNumeros.setText(""));
-        botonLimpiarMensaje.addActionListener(e -> areaMensaje.setText(""));
+        sendButton.addActionListener(e -> generarEnlaces());
+        copyAllButton.addActionListener(e -> copiarAlPortapapeles(linksTextArea.getText()));
+        clearLinksButton.addActionListener(e -> limpiarTodosEnlaces());
+        sendMessagesButton.addActionListener(e -> abrirEnlacesEnNavegador()); 
+
+        clearPhoneButton.addActionListener(e -> phoneNumbersField.setText(""));
+        clearMessageButton.addActionListener(e -> messageArea.setText(""));
     }
 
     private void ajustarDivisor() {
-        SwingUtilities.invokeLater(() -> divisor.setDividerLocation(getWidth() / 2));
+        SwingUtilities.invokeLater(() -> {
+            int width = getWidth();
+            splitPane.setDividerLocation(width / 2);
+        });
     }
 
     private void generarEnlaces() {
-        String numeros = campoNumeros.getText().trim();
-        String mensaje = areaMensaje.getText().trim();
+        String phoneNumbers = phoneNumbersField.getText().trim();
+        String message = messageArea.getText().trim();
 
-        if (numeros.isEmpty() || mensaje.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Ingresa al menos un número y el mensaje.", "Error", JOptionPane.ERROR_MESSAGE);
+        if (phoneNumbers.isEmpty() || message.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingresa al menos un número y el mensaje.", "Error: Campos vacíos", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        panelEnlaces.removeAll();
-        areaEnlaces.setText("");
-        String[] listaNumeros = numeros.split("\\s*,\\s*");
+        linksPanel.removeAll();
+        linksTextArea.setText(""); 
 
-        for (String numero : listaNumeros) {
+        String[] numbersArray = phoneNumbers.split("\\s*,\\s*");
+
+        for (String number : numbersArray) {
             try {
-                String mensajeCodificado = URLEncoder.encode(mensaje, StandardCharsets.UTF_8.toString());
-                String enlace = "https://web.whatsapp.com/send?phone=" + numero + "&text=" + mensajeCodificado;
+                String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8.toString());
+                String link = "https://web.whatsapp.com/send?phone=" + number + "&text=" + encodedMessage;
+                
 
-                JLabel etiquetaEnlace = new JLabel("<html><a href='" + enlace + "'>" + enlace + "</a></html>");
-                etiquetaEnlace.setForeground(Color.BLUE);
-                etiquetaEnlace.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                
+                JLabel linkLabel = new JLabel("<html><a href='" + link + "'>" + link + "</a></html>");
+                linkLabel.setForeground(Color.BLUE);
+                linkLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-                JButton botonCopiar = new JButton("Copiar");
-                botonCopiar.addActionListener(e -> copiarAlPortapapeles(enlace));
+                
+                JButton copyButton = new JButton("Copiar");
+                copyButton.addActionListener(e -> copiarAlPortapapeles(link));
 
-                JPanel panelEnlace = new JPanel(new BorderLayout());
-                panelEnlace.add(etiquetaEnlace, BorderLayout.CENTER);
-                panelEnlace.add(botonCopiar, BorderLayout.EAST);
-                panelEnlaces.add(panelEnlace);
+                JPanel linkPanel = new JPanel(new BorderLayout());
+                linkPanel.add(linkLabel, BorderLayout.CENTER);
+                linkPanel.add(copyButton, BorderLayout.EAST);
+                linksPanel.add(linkPanel);
+                
+                linksTextArea.append(link + "\n");
 
-                areaEnlaces.append(enlace + "\n");
             } catch (UnsupportedEncodingException ex) {
                 ex.printStackTrace();
             }
         }
-        panelEnlaces.revalidate();
-        panelEnlaces.repaint();
+        linksPanel.revalidate();
+        linksPanel.repaint();
     }
 
     private void copiarAlPortapapeles(String texto) {
-        StringSelection seleccion = new StringSelection(texto);
-        Clipboard portapapeles = Toolkit.getDefaultToolkit().getSystemClipboard();
-        portapapeles.setContents(seleccion, null);
+        StringSelection stringSelection = new StringSelection(texto);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, null);
     }
 
     private void limpiarTodosEnlaces() {
-        areaEnlaces.setText("");
-        panelEnlaces.removeAll();
-        panelEnlaces.revalidate();
-        panelEnlaces.repaint();
+        linksTextArea.setText("");
+        linksPanel.removeAll();
+        linksPanel.revalidate();
+        linksPanel.repaint();
     }
 
-    private void aplicarFiltroNumeros(JTextField campoTexto) {
-        campoTexto.addKeyListener(new KeyAdapter() {
+    private void aplicarFiltroNumeros(JTextField textField) {
+        textField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
@@ -190,36 +249,58 @@ public class Sender extends JFrame {
 
     private void abrirEnlacesEnNavegador() {
         String[] enlaces = linksTextArea.getText().split("\\s*\\n\\s*");
-    try {
-        Robot robot = new Robot();
-        Runtime.getRuntime().exec("cmd /c start chrome");
-        Thread.sleep(1000);
+        int mensajesEnviados = 0;
+        try {
+            Robot robot = new Robot();
+            
+            Runtime.getRuntime().exec("cmd /c start chrome");
+            Thread.sleep(1000); 
 
-        for (String enlace : enlaces) {
-            robot.keyPress(KeyEvent.VK_CONTROL);
-            robot.keyPress(KeyEvent.VK_L);
-            robot.keyRelease(KeyEvent.VK_L);
-            robot.keyRelease(KeyEvent.VK_CONTROL);
-            Thread.sleep(1000);
+            for (String enlace : enlaces) {
+                
+                robot.keyPress(KeyEvent.VK_CONTROL);
+                robot.keyPress(KeyEvent.VK_L);
+                robot.keyRelease(KeyEvent.VK_L);
+                robot.keyRelease(KeyEvent.VK_CONTROL);
+                Thread.sleep(6000);
 
-            StringSelection stringSelection = new StringSelection(enlace);
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
+                StringSelection stringSelection = new StringSelection(enlace);
+                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                clipboard.setContents(stringSelection, null);
+                robot.keyPress(KeyEvent.VK_CONTROL);
+                robot.keyPress(KeyEvent.VK_V);
+                robot.keyRelease(KeyEvent.VK_V);
+                robot.keyRelease(KeyEvent.VK_CONTROL);
+                Thread.sleep(4000);
 
-            robot.keyPress(KeyEvent.VK_CONTROL);
-            robot.keyPress(KeyEvent.VK_V);
-            robot.keyRelease(KeyEvent.VK_V);
-            robot.keyRelease(KeyEvent.VK_CONTROL);
-            Thread.sleep(1000);
+                robot.keyPress(KeyEvent.VK_ENTER);
+                robot.keyRelease(KeyEvent.VK_ENTER);
+                Thread.sleep(4000);
 
-            robot.keyPress(KeyEvent.VK_ENTER);
-            robot.keyRelease(KeyEvent.VK_ENTER);
-            Thread.sleep(5000); // Esperar entre enlaces
+                Thread.sleep(6000);
+
+                robot.keyPress(KeyEvent.VK_ENTER);
+                robot.keyRelease(KeyEvent.VK_ENTER);
+                Thread.sleep(6000);
+
+                robot.keyPress(KeyEvent.VK_CONTROL);
+                robot.keyPress(KeyEvent.VK_L);
+                robot.keyRelease(KeyEvent.VK_L);
+                robot.keyRelease(KeyEvent.VK_CONTROL);
+                Thread.sleep(5000);
+
+                Thread.sleep(5000);
+
+                mensajesEnviados++;
+
+                if (mensajesEnviados % 25 == 0) {
+                    System.out.println("Esperando 3600 segundos...");
+                    Thread.sleep(7000);
+                }
+            }
+        } catch (AWTException | IOException | InterruptedException e) {
+            e.printStackTrace();
         }
-    } catch (AWTException | IOException | InterruptedException e) {
-        e.printStackTrace();
-    }
-
     }
 
     public static void main(String[] args) {
